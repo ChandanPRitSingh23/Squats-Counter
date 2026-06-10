@@ -1,1 +1,4 @@
-# Day 1 GitHub Practice
+# Day 1 GitHub Practicegit status
+
+
+print("Squat Counter Started")
