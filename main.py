@@ -1,4 +1,1 @@
-# Day 1 GitHub Practicegit status
-
-
-print("Squat Counter Started")
+#lets goo brdrrr hlwww
