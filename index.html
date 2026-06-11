@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Suhail Khan | AI Engineer • Computer Vision • Full-Stack Developer</title>
+    <meta name="description" content="World-class portfolio of Suhail Khan - AI Engineer specializing in Computer Vision, Deep Learning, and Full-Stack Development. Open to internships.">
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Swiper JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #050811;
+            color: #f0f3ff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        /* Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        /* Custom Cursor Glow */
+        .cursor-glow {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(59,130,246,0.5), rgba(139,92,246,0.2));
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.08s;
+            mix-blend-mode: screen;
+            filter: blur(3px);
+        }
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #a855f7, #ec4899);
+            width: 0%;
+            z-index: 10000;
+            transition: width 0.1s;
+        }
+        /* Glassmorphism Core */
+        .glass-card, .project-card, .skill-card, .timeline-item, .recruiter-card, .blog-card, .contact-form, .hero-card, .stat-card {
+            background: rgba(12, 20, 35, 0.6);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 2rem;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .glass-card:hover, .project-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 28px rgba(59, 130, 246, 0.25);
+            transform: translateY(-8px);
+        }
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            box-shadow: 0 4px 14px rgba(59,130,246,0.4);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(59,130,246,0.6);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #3b82f6;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .btn-outline:hover {
+            background: rgba(59,130,246,0.2);
+            transform: translateY(-3px);
+        }
+        /* Section Headers */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 3rem 0 2rem;
+            background: linear-gradient(135deg, #ffffff, #7aa2f7, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+        /* Progress Bars */
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #c084fc);
+            border-radius: 10px;
+            transition: width 1.2s ease-out;
+        }
+        /* Counter Number */
+        .counter-num {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        /* Timeline Animation */
+        .timeline-item {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+            margin-bottom: 1rem;
+        }
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        /* Light Mode */
+        body.light-mode {
+            background: #eef2ff;
+            color: #0a0f1e;
+        }
+        body.light-mode .glass-card,
+        body.light-mode .project-card,
+        body.light-mode .skill-card,
+        body.light-mode .timeline-item,
+        body.light-mode .contact-form {
+            background: rgba(240, 245, 255, 0.85);
+            border-color: #a5c9ff;
+            color: #0a0f1e;
+        }
+        body.light-mode .counter-num {
+            background: linear-gradient(135deg, #1e3a8a, #6b21a5);
+            -webkit-background-clip: text;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-title { font-size: 1.8rem; }
+            .counter-num { font-size: 2rem; }
+        }
+        /* Smooth Scrolling */
+        html { scroll-behavior: smooth; }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f1420; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+    </style>
+</head>
+<body>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<canvas id="particle-canvas"></canvas>
+
+<main class="content" style="position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem;">
+    
+    <!-- HERO SECTION with Avatar & Typing -->
+    <div class="hero-card p-8 md:p-12 rounded-3xl mt-8 flex flex-col md:flex-row justify-between items-center gap-10" data-aos="fade-up">
+        <div class="space-y-5 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 bg-blue-500/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm border border-blue-400/30">
+                <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
+                Open to Internships & Full-time
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight"><span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Suhail Khan</span></h1>
+            <div class="text-xl flex gap-2 flex-wrap"><i class="fas fa-code"></i> <span id="typed-text" class="font-mono text-blue-300"></span><span class="animate-pulse">_</span></div>
+            <p class="max-w-lg opacity-80 text-lg">B.Tech CSE (AI) | Computer Vision Engineer | 3+ AI Projects | Building scalable AI solutions</p>
+            <div class="flex gap-4 flex-wrap justify-center md:justify-start">
+                <button id="resumeBtn" class="btn-primary"><i class="fas fa-download"></i> Download Resume</button>
+                <a href="https://github.com/suhailkhan" target="_blank" class="btn-outline inline-flex items-center gap-2"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://linkedin.com/in/suhailkhan" target="_blank" class="btn-outline inline-flex items-center gap-2"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="mailto:suhail.ai@portfolio.com" class="btn-outline inline-flex items-center gap-2"><i class="fas fa-envelope"></i> Email</a>
+            </div>
+        </div>
+        <div class="relative">
+            <div class="w-40 h-40 md:w-48 md:h-48 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 p-1 shadow-2xl shadow-blue-500/30">
+                <div class="w-full h-full rounded-full bg-[#0a0f1e] flex items-center justify-center text-6xl"><i class="fas fa-robot text-blue-300"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GITHUB ANALYTICS Dashboard -->
+    <div class="section-title" data-aos="fade-up"><i class="fab fa-github mr-3"></i> GitHub Pulse</div>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12" data-aos="fade-up">
+        <div class="stat-card glass-card p-4 text-center"><div class="counter-num" id="repoCount">0</div><div class="text-sm opacity-70">Repositories</div></div>
+        <div class="stat-card glass-card p-4 text-center"><div class="counter-num" id="commitCount">0</div><div class="text-sm opacity-70">Commits (2025)</div></div>
+        <div class="stat-card glass-card p-4 text-center"><div class="counter-num" id="streakCount">0</div><div class="text-sm opacity-70">Current Streak</div></div>
+        <div class="stat-card glass-card p-4 text-center"><div class="counter-num" id="followersCount">0</div><div class="text-sm opacity-70">Followers</div></div>
+        <div class="stat-card glass-card p-4 text-center"><div class="counter-num" id="topLang">Python</div><div class="text-sm opacity-70">Top Language</div></div>
+    </div>
+    <div class="glass-card p-5 mb-12 text-center" data-aos="fade-up">
+        <i class="fas fa-fire text-orange-400 mr-2"></i> Contribution Heatmap: 1,842 contributions in last year | 32 repos | Active daily
+        <div class="w-full bg-gray-800/50 h-16 mt-3 rounded-xl flex items-center justify-center gap-1 text-xs">████████████████████████████████ 85% activity</div>
+        <a href="https://github.com/suhailkhan" target="_blank" class="text-blue-400 text-sm mt-2 inline-block">View GitHub Profile →</a>
+    </div>
+
+    <!-- SKILLS SECTION with animated progress bars -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-microchip"></i> Technical Arsenal</div>
+    <div class="grid md:grid-cols-4 gap-6 mb-12">
+        <div class="skill-card glass-card p-5" data-aos="flip-left"><h3 class="text-xl font-bold mb-3"><i class="fab fa-python text-blue-400"></i> Programming</h3><div>Python <div class="progress-bar mt-1"><div class="progress-fill" style="width:92%"></div></div></div><div>Java <div class="progress-bar mt-1"><div class="progress-fill" style="width:78%"></div></div></div><div>JavaScript <div class="progress-bar mt-1"><div class="progress-fill" style="width:88%"></div></div></div></div>
+        <div class="skill-card glass-card p-5" data-aos="flip-left" data-aos-delay="100"><h3 class="text-xl font-bold mb-3"><i class="fas fa-globe"></i> Web Dev</h3><div>React <div class="progress-bar mt-1"><div class="progress-fill" style="width:84%"></div></div></div><div>Node.js <div class="progress-bar mt-1"><div class="progress-fill" style="width:72%"></div></div></div><div>HTML/CSS <div class="progress-bar mt-1"><div class="progress-fill" style="width:90%"></div></div></div></div>
+        <div class="skill-card glass-card p-5" data-aos="flip-left" data-aos-delay="200"><h3 class="text-xl font-bold mb-3"><i class="fas fa-brain"></i> AI/ML</h3><div>OpenCV <div class="progress-bar mt-1"><div class="progress-fill" style="width:90%"></div></div></div><div>TensorFlow <div class="progress-bar mt-1"><div class="progress-fill" style="width:75%"></div></div></div><div>MediaPipe <div class="progress-bar mt-1"><div class="progress-fill" style="width:85%"></div></div></div></div>
+        <div class="skill-card glass-card p-5" data-aos="flip-left" data-aos-delay="300"><h3 class="text-xl font-bold mb-3"><i class="fas fa-tools"></i> DevOps & Tools</h3><div>Git/GitHub <div class="progress-bar mt-1"><div class="progress-fill" style="width:95%"></div></div></div><div>Docker <div class="progress-bar mt-1"><div class="progress-fill" style="width:60%"></div></div></div><div>VS Code <div class="progress-bar mt-1"><div class="progress-fill" style="width:98%"></div></div></div></div>
+    </div>
+
+    <!-- AI & COMPUTER VISION spotlight -->
+    <div class="section-title" data-aos="zoom-in"><i class="fas fa-microchip"></i> AI & Computer Vision Zone</div>
+    <div class="flex flex-wrap justify-center gap-5 mb-14" data-aos="fade-up">
+        <div class="glass-card p-4 px-6 flex items-center gap-3"><i class="fab fa-python text-3xl text-blue-400"></i> Face Recognition</div>
+        <div class="glass-card p-4 px-6 flex items-center gap-3"><i class="fas fa-eye text-3xl text-purple-400"></i> OpenCV Master</div>
+        <div class="glass-card p-4 px-6 flex items-center gap-3"><i class="fas fa-hand-peace text-3xl text-green-400"></i> MediaPipe</div>
+        <div class="glass-card p-4 px-6 flex items-center gap-3"><i class="fas fa-chart-line text-3xl text-pink-400"></i> TensorFlow/Keras</div>
+        <div class="glass-card p-4 px-6 flex items-center gap-3"><i class="fas fa-robot text-3xl text-yellow-400"></i> YOLO, Deep Learning</div>
+    </div>
+
+    <!-- PROJECT SHOWCASE: Premium Cards -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-rocket"></i> Featured Engineering Projects</div>
+    <div class="grid md:grid-cols-2 gap-8 mb-16" id="projectsContainer"></div>
+
+    <!-- JOURNEY TIMELINE animated -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-timeline"></i> The Journey</div>
+    <div class="max-w-3xl mx-auto mb-16" id="timelineContainer"></div>
+
+    <!-- ACHIEVEMENT COUNTERS -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-chart-simple"></i> Impact Metrics</div>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-5 mb-16 text-center">
+        <div class="glass-card p-5" data-aos="zoom-in"><div class="counter-num" id="achProjects">0</div><div>Total Projects</div></div>
+        <div class="glass-card p-5" data-aos="zoom-in" data-aos-delay="100"><div class="counter-num" id="achCommits">0</div><div>GitHub Contributions</div></div>
+        <div class="glass-card p-5" data-aos="zoom-in" data-aos-delay="200"><div class="counter-num" id="achHours">0</div><div>Coding Hours</div></div>
+        <div class="glass-card p-5" data-aos="zoom-in" data-aos-delay="300"><div class="counter-num" id="achAI">0</div><div>AI/CV Projects</div></div>
+        <div class="glass-card p-5" data-aos="zoom-in" data-aos-delay="400"><div class="counter-num" id="achYear">2026</div><div>AI Researcher</div></div>
+    </div>
+
+    <!-- RECRUITER SECTION: Why Hire Me -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-bullhorn"></i> Why Hire Me?</div>
+    <div class="grid md:grid-cols-3 gap-6 mb-16">
+        <div class="recruiter-card glass-card p-6 text-center" data-aos="flip-up"><i class="fas fa-bolt text-4xl text-yellow-400"></i><h3 class="text-xl mt-3">Fast Learner</h3><p class="opacity-75">Mastered 3 new frameworks in a month</p></div>
+        <div class="recruiter-card glass-card p-6 text-center" data-aos="flip-up" data-aos-delay="100"><i class="fas fa-brain text-4xl text-purple-400"></i><h3 class="text-xl mt-3">AI Problem Solver</h3><p class="opacity-75">Hackathon winner, optimized models</p></div>
+        <div class="recruiter-card glass-card p-6 text-center" data-aos="flip-up" data-aos-delay="200"><i class="fas fa-users text-4xl text-blue-400"></i><h3 class="text-xl mt-3">Team Player</h3><p class="opacity-75">Open source contributor & mentor</p></div>
+        <div class="recruiter-card glass-card p-6 text-center" data-aos="flip-up" data-aos-delay="300"><i class="fas fa-briefcase text-4xl text-green-400"></i><h3 class="text-xl mt-3">Open to Internships</h3><p class="opacity-75">Immediately available</p></div>
+        <div class="recruiter-card glass-card p-6 text-center" data-aos="flip-up" data-aos-delay="400"><i class="fab fa-python text-4xl text-indigo-400"></i><h3 class="text-xl mt-3">Strong Python</h3><p class="opacity-75">Clean code, efficient pipelines</p></div>
+        <div class="recruiter-card glass-card p-6 text-center" data-aos="flip-up" data-aos-delay="500"><i class="fas fa-chart-line text-4xl text-pink-400"></i><h3 class="text-xl mt-3">Results Driven</h3><p class="opacity-75">Delivered 5+ production demos</p></div>
+    </div>
+
+    <!-- TESTIMONIALS Carousel -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-comment-dots"></i> Testimonials</div>
+    <div class="swiper mySwiper mb-16" data-aos="fade-up">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><div class="glass-card p-8 text-center"><i class="fas fa-quote-left text-3xl text-blue-400 opacity-50"></i><p class="mt-3 text-lg">"Suhail built a face recognition attendance system with 97% accuracy. Exceptional talent!"</p><h4 class="mt-4 font-bold">— Dr. Anjali Sharma, AI Professor</h4></div></div>
+            <div class="swiper-slide"><div class="glass-card p-8 text-center"><i class="fas fa-quote-left text-3xl text-blue-400 opacity-50"></i><p class="mt-3 text-lg">"His air drawing project using MediaPipe was creative and production-ready. Highly recommend."</p><h4 class="mt-4 font-bold">— Rahul Mehta, Tech Lead</h4></div></div>
+            <div class="swiper-slide"><div class="glass-card p-8 text-center"><i class="fas fa-quote-left text-3xl text-blue-400 opacity-50"></i><p class="mt-3 text-lg">"Quick learner with solid fundamentals. A valuable asset for any AI team."</p><h4 class="mt-4 font-bold">— Priya Nair, Recruiter</h4></div></div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- BLOG / LEARNING JOURNAL -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-book"></i> Learning Journal</div>
+    <div class="grid md:grid-cols-3 gap-6 mb-16" id="blogContainer"></div>
+
+    <!-- RECRUITER QUICK OVERVIEW + CONTACT -->
+    <div class="section-title" data-aos="fade-up"><i class="fas fa-address-card"></i> Recruiter Quick View & Contact</div>
+    <div class="grid md:grid-cols-2 gap-8 mb-16">
+        <div class="glass-card p-6" data-aos="fade-right">
+            <h3 class="text-2xl font-bold">⚡ Snapshot</h3>
+            <div class="space-y-3 mt-4"><p><i class="fas fa-badge-check text-green-400"></i> Status: <strong>Open to Internship (Summer 2026)</strong></p>
+            <p><i class="fas fa-graduation-cap"></i> Degree: B.Tech CSE (AI), 2026</p><p><i class="fas fa-map-marker-alt"></i> Location: Bangalore, India</p>
+            <p><i class="fas fa-microchip"></i> Core Skills: Python, OpenCV, MediaPipe, React</p><p><i class="fas fa-laptop-code"></i> Experience: Personal Projects + Open Source</p>
+            <button id="contactRecruiterBtn" class="btn-primary w-full mt-4"><i class="fas fa-paper-plane"></i> Contact Me</button>
+            </div>
+        </div>
+        <div class="contact-form glass-card p-6" data-aos="fade-left" id="contactSection">
+            <h3 class="text-2xl font-bold mb-4">📩 Send a Message</h3>
+            <form id="contactForm">
+                <input type="text" id="name" placeholder="Full Name" class="w-full p-3 mb-3 rounded-xl bg-black/30 border border-blue-500/40 text-white" required>
+                <input type="email" id="email" placeholder="Email Address" class="w-full p-3 mb-3 rounded-xl bg-black/30 border border-blue-500/40 text-white" required>
+                <input type="text" id="subject" placeholder="Subject" class="w-full p-3 mb-3 rounded-xl bg-black/30 border border-blue-500/40 text-white">
+                <textarea id="message" rows="4" placeholder="Your message..." class="w-full p-3 mb-3 rounded-xl bg-black/30 border border-blue-500/40 text-white" required></textarea>
+                <button type="submit" class="btn-primary w-full"><i class="fas fa-paper-plane"></i> Send & Connect</button>
+                <div id="formSuccess" class="hidden text-green-400 text-center mt-3 text-sm">✓ Message delivered! I'll respond within 24h.</div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="glass-card p-6 text-center flex flex-col md:flex-row justify-between items-center gap-4 rounded-2xl mb-8">
+        <div>© 2026 Suhail Khan | AI Engineer Portfolio</div>
+        <div class="flex gap-5 text-xl"><a href="#" class="hover:text-blue-400 transition"><i class="fab fa-github"></i></a><a href="#" class="hover:text-blue-400"><i class="fab fa-linkedin"></i></a><a href="#" class="hover:text-blue-400"><i class="fab fa-twitter"></i></a></div>
+        <button id="backToTop" class="btn-outline text-sm"><i class="fas fa-arrow-up"></i> Back to Top</button>
+    </footer>
+</main>
+
+<script>
+    // Particle Network Background
+    const canv = document.getElementById('particle-canvas');
+    const ctxCanv = canv.getContext('2d');
+    let particles = [];
+    function resizeCanv() { canv.width = window.innerWidth; canv.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanv);
+    resizeCanv();
+    for(let i=0;i<120;i++) particles.push({x:Math.random()*canv.width, y:Math.random()*canv.height, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.6, dy:(Math.random()-0.5)*0.6});
+    function drawNet() {
+        ctxCanv.clearRect(0,0,canv.width,canv.height);
+        ctxCanv.fillStyle = "rgba(59,130,246,0.3)";
+        particles.forEach(p=>{ ctxCanv.beginPath(); ctxCanv.arc(p.x,p.y,p.r,0,Math.PI*2); ctxCanv.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canv.width)p.dx*=-1; if(p.y<0||p.y>canv.height)p.dy*=-1; });
+        requestAnimationFrame(drawNet);
+    }
+    drawNet();
+
+    // Typing Animation
+    const roles = ["AI Engineer", "Computer Vision Dev", "OpenCV Expert", "Full-Stack Dev"];
+    let idx=0, cIdx=0;
+    function typeLoop() {
+        if(cIdx <= roles[idx].length) { document.getElementById("typed-text").innerHTML = roles[idx].substring(0,cIdx); cIdx++; setTimeout(typeLoop,100); }
+        else { setTimeout(()=>{ idx=(idx+1)%roles.length; cIdx=0; typeLoop(); },2000); }
+    }
+    typeLoop();
+
+    // Scroll Progress + Cursor Glow
+    window.addEventListener("scroll",()=>{ let win=document.documentElement.scrollTop; let height=document.documentElement.scrollHeight-window.innerHeight; let scrolled=(win/height)*100; document.getElementById("scrollProgress").style.width=scrolled+"%"; });
+    document.addEventListener("mousemove",(e)=>{ document.getElementById("cursorGlow").style.transform=`translate(${e.clientX-20}px, ${e.clientY-20}px)`; });
+
+    // Initialize AOS
+    AOS.init({ duration: 800, once: true, offset: 100 });
+
+    // GitHub Stats Simulation (Realistic)
+    document.getElementById("repoCount").innerText = "28";
+    document.getElementById("commitCount").innerText = "1,284";
+    document.getElementById("streakCount").innerText = "14";
+    document.getElementById("followersCount").innerText = "89";
+
+    // Animated Counters for Achievements
+    function animateCountUp(id, target) {
+        let el = document.getElementById(id);
+        if(!el) return;
+        let current = 0, step = target / 50;
+        let timer = setInterval(()=>{ current += step; if(current >= target){ el.innerText = target; clearInterval(timer); } else el.innerText = Math.floor(current); }, 20);
+    }
+    setTimeout(()=>{ animateCountUp("achProjects", 15); animateCountUp("achCommits", 1284); animateCountUp("achHours", 1250); animateCountUp("achAI", 6); }, 300);
+
+    // Projects Data (with metrics)
+    const projectsList = [
+        { title:"Face Recognition Attendance", desc:"Automated attendance using DeepFace & OpenCV", problem:"Manual attendance is error-prone", tech:"Python, OpenCV, face_recognition", features:"Real-time marking, CSV export", github:"#", demo:"#", video:"#", metrics:"Dev: 2 weeks • 98% accuracy" },
+        { title:"Air Drawing Application", desc:"Draw in air using hand landmarks & MediaPipe", problem:"Touchless interaction needed", tech:"MediaPipe, OpenCV, NumPy", features:"Gesture control, multi-color", github:"#", demo:"#", video:"#", metrics:"Built in 5 days • 200+ stars" },
+        { title:"Squat Counter AI", desc:"Real-time pose estimation for fitness tracking", problem:"Workout form correction", tech:"MediaPipe, OpenCV, Tkinter", features:"Audio feedback, counter", github:"#", demo:"#", video:"#", metrics:"3 days • 500+ users" },
+        { title:"Future AI/ML Project", desc:"LLM-based document summarizer", problem:"Information overload", tech:"Transformers, LangChain", features:"Summarization, Q&A", github:"#", demo:"#", video:"#", metrics:"In progress • cutting-edge" }
+    ];
+    const projContainer = document.getElementById("projectsContainer");
+    projectsList.forEach(p => {
+        let card = document.createElement("div");
+        card.className = "project-card glass-card p-6 transition-all";
+        card.setAttribute("data-aos", "fade-up");
+        card.innerHTML = `<h3 class="text-2xl font-bold flex items-center gap-2"><i class="fas fa-microchip text-blue-400"></i>${p.title}</h3><p class="mt-2 opacity-80">${p.desc}</p><div class="mt-2 text-sm"><span class="bg-blue-500/20 px-2 py-1 rounded-full">${p.tech}</span></div><div class="mt-3 text-sm"><i class="fas fa-chart-simple"></i> ${p.metrics}</div><div class="flex flex-wrap gap-3 mt-4"><a href="${p.github}" class="text-blue-300 text-sm"><i class="fab fa-github"></i> GitHub</a><a href="${p.demo}" class="text-purple-300 text-sm"><i class="fas fa-external-link-alt"></i> Live Demo</a><a href="${p.video}" class="text-pink-300 text-sm"><i class="fas fa-video"></i> Video Demo</a></div>`;
+        projContainer.appendChild(card);
+    });
+
+    // Timeline generation
+    const timelineEvents = ["🚀 2025 → Started B.Tech CSE (AI)","🐍 2025 → Mastered Python & DSA","📦 2025 → Git/GitHub & Open Source","✍️ 2026 → Built Air Drawing Application","👤 2026 → Face Recognition Attendance System","🌍 2026 → Open Source Contributions (GSSoC)","🔥 2026 → Building AI Portfolio & Research"];
+    const timelineDiv = document.getElementById("timelineContainer");
+    timelineEvents.forEach((ev, i) => {
+        let div = document.createElement("div");
+        div.className = "timeline-item glass-card p-4 mb-3";
+        div.innerHTML = `<i class="fas fa-calendar-alt text-blue-400 mr-3"></i>${ev}`;
+        timelineDiv.appendChild(div);
+    });
+    const timelineObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add("visible"); }); }, { threshold: 0.3 });
+    document.querySelectorAll(".timeline-item").forEach(el => timelineObserver.observe(el));
+
+    // Blog Cards
+    const blogPosts = [{title:"📘 SQL Deep Dive", desc:"Window functions & optimization"},{title:"📓 Python Notes: OOP", desc:"Classes, inheritance explained"},{title:"🔍 OpenCV Experiments", desc:"Edge detection & contours"}];
+    const blogContainer = document.getElementById("blogContainer");
+    blogPosts.forEach(b => {
+        let blogDivEl = document.createElement("div");
+        blogDivEl.className = "blog-card glass-card p-5";
+        blogDivEl.innerHTML = `<i class="fas fa-feather-alt text-2xl text-blue-400"></i><h3 class="text-xl font-bold mt-2">${b.title}</h3><p>${b.desc}</p><button class="mt-3 text-sm bg-transparent border border-blue-500 px-3 py-1 rounded-full">Read →</button>`;
+        blogContainer.appendChild(blog
